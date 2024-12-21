@@ -9,6 +9,11 @@ require("./config/passport");
 
 const app = express();
 
+// ERROR HANDLING
+pool.on("error", (err) => {
+  console.error("Unexpected error on idle client", err);
+});
+
 // Set EJS as a render engine
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
@@ -38,6 +43,15 @@ app.use(
 // Initialize Passport
 app.use(passport.initialize());
 app.use(passport.session());
+
+// ERROR HANDLING
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({
+    message: "Something broke on the server!",
+    error: process.env.NODE_ENV === "development" ? err.message : {},
+  });
+});
 
 // Routes
 app.use("/", require("./routes/index"));
