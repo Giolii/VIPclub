@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>
+        <%= title%>
+    </title>
+</head>
+
+<body>
+    <div class="topPage">
+        <h1>
+            <%=title%>
+        </h1>
+        <h2>Welcome back <%=user.username%>
+        </h2>
+        <% if (user && user.isvip) { %>
+            <b>VIP</b>
+            <% } else { %>
+                <button onclick="requestVipStatus()">Request VIP status</button>
+                <%}%>
+                    <% if (user && user.ismember) { %>
+                        <b>You are a member</b>
+                        <% } else { %>
+                            <button onclick="requestMembership()">Request Membership</button>
+                            <%}%>
+                                <a href="/auth/logout">LOGOUT</a>
+    </div>
+
+    <%- include('partials/dashboard') %>
+
+        <form action="/user/send" method="POST" class="formSendMessage">
+            <label for="title">Title</label>
+            <input id="title" name="title" placeholder="Title" type="text" required />
+            <label for="content">Content</label>
+            <textarea id="content" name="content" placeholder="content" type="text" required></textarea>
+            <button>Send</button>
+        </form>
+
+</body>
+
+<script>
+    async function requestVipStatus() {
+        try {
+            const response = await fetch('/user/requestVipStatus', {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+            })
+            window.location.reload()
+        } catch (error) {
+            console.error('Error: changing VIP status', error)
+        }
+    }
+    async function requestMembership() {
+        try {
+            const response = await fetch('/user/requestMembership', {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+            })
+            window.location.reload()
+        } catch (error) {
+
+            console.error('Error changing membership:', error)
+        }
+    }
+
+</script>
+
+</html>

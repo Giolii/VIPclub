@@ -1,0 +1,57 @@
+<div class="dashboard">
+    <h1>Messages:</h1>
+    <div class="messagesContainer">
+        <% if (messages && messages.length> 0) {%>
+            <%messages.forEach((message)=>{%>
+                <div class="messageContainer">
+                    <div class="messageAuthorContainer">
+                        Author:
+                        <% if (user && user.ismember) {%>
+                            <b>
+                                <%=message.firstname%>
+                                    <%=message.lastname%>
+                            </b>
+                            <%}%>
+                    </div>
+                    <div class="messageTitleContainer">
+                        Title: <b>
+                            <%=message.title%>
+                        </b>
+                    </div>
+                    <div class="messageContentContainer">
+                        Content: <%=message.content%>
+                    </div>
+                    <div class="createdAtContainer">
+                        Date:
+                        <% if (user && user.ismember) {%>
+                            <%=message.created_at.toLocaleDateString() %>
+                                <%=message.created_at.toLocaleTimeString()%>
+                                    <%}%>
+                    </div>
+                    <% if(user && user.isvip) {%>
+                        <button class="deleteMessageButton" onclick="deleteMessage(<%=message.id%>)">❌</button>
+                        <% } %>
+                </div>
+                <%})}%>
+    </div>
+</div>
+
+<script>
+    async function deleteMessage(msgId) {
+        try {
+            const response = await fetch('/user/deleteMessage', {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: msgId
+                })
+            })
+            window.location.reload()
+        } catch (error) {
+            console.error('Error:', error)
+        }
+
+    }
+</script>
