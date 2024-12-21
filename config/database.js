@@ -1,11 +1,10 @@
 const { Pool } = require("pg");
 
 const pool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
+  connectionString: process.env.DATABASE_URL, // Use process.env to access environment variables
+  ssl: {
+    rejectUnauthorized: false, // Needed for some hosted databases like Heroku
+  },
 });
 
 module.exports = { pool };
